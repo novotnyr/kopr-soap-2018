@@ -1,19 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions 
-        xmlns:kopr="urn:X-kopr" 
-        targetNamespace="urn:kopr"
-        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
-        xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="urn:X-kopr"
+	xmlns:kopr="urn:X-kopr"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
-  <wsdl:types>
-    <xsd:schema targetNamespace="urn:X-kopr">
-        ...
-    </xsd:schema>
-  </wsdl:types>
-  
-  ...
+	<wsdl:types>
+		<xsd:schema targetNamespace="urn:X-kopr">
+			<xsd:element name="nazov" type="xsd:string" />
+			<xsd:element name="kvet">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="nazov" type="xsd:string" />
+						<xsd:element name="farba" type="xsd:string" />
+						<xsd:element name="cena" type="xsd:decimal" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
 
+	<wsdl:message name="FindRequest">
+		<wsdl:part name="FindRequestPart" element="kopr:nazov" />
+	</wsdl:message>
+	<wsdl:message name="FindResponse">
+		<wsdl:part name="FindResponsePart" element="kopr:kvet" />
+	</wsdl:message>
 
+	<wsdl:portType name="KvetPortType">
+		<wsdl:operation name="find">
+			<wsdl:input message="kopr:FindRequest" />
+			<wsdl:output message="kopr:FindResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
 
+	<wsdl:binding name="KvetBinding" type="kopr:KvetPortType">
+		<soap:binding
+			transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+		<wsdl:operation name="find">
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<wsdl:service name="KvetService">
+		<wsdl:port name="KvetPort" binding="kopr:KvetBinding">
+			<soap:address location="http://localhost:8080/kvet" />
+		</wsdl:port>
+	</wsdl:service>
 </wsdl:definitions>
